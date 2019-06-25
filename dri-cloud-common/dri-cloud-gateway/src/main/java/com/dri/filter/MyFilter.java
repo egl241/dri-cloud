@@ -3,6 +3,7 @@ package com.dri.filter;
 
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,7 +45,15 @@ public class MyFilter extends ZuulFilter {
 
 		try {
 			Claims claims = Jwts.parser().setSigningKey("test".getBytes("UTF-8")).parseClaimsJws(token.toString()).getBody();
-			log.info("Expirate date:"+claims.getExpiration());
+			long expirationTime = claims.getExpiration().getTime();
+			long currentTime = System.currentTimeMillis();
+			if(expirationTime>currentTime) {
+				log.info("令牌当前有效! expirationTime:"+expirationTime+"===>currentTime:"+currentTime);
+			}
+			
+			String dateExpiration = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(claims.getExpiration());
+			
+			log.info("Expirate date:"+dateExpiration);
 			log.info("authorities:"+claims.get("authorities"));
 			log.info("client_id:"+claims.get("client_id"));
 		
