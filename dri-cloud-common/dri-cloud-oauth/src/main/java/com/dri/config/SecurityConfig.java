@@ -32,8 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new DomainUserDetailsService();
 	}
 
-	// @Autowired
-	// private DomainUserDetailsService userDetailsService;
+	
 
 	/**
 	 * 全局用户信息
@@ -44,18 +43,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		// auth.userDetailsService(userDetailsService()).passwordEncoder(new
-		// MyPasswordEncoder()); 
-		System.out.println("MySecurityConfigMySecurityConfig configureGlobal(AuthenticationManagerBuilder auth)");
+		
 		auth.userDetailsService(userDetailsService());
-
-		//auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder()).withUser("admin")
-		//		.password(new BCryptPasswordEncoder().encode("admin")).roles("USER");
 	}
 
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
-		// TODO Auto-generated method stub
+		
 		return super.authenticationManagerBean();
 	}
 
@@ -68,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		System.out.println("MySecurityConfig configure(HttpSecurity http)");
+		log.info("MySecurityConfig configure(HttpSecurity http)");
 		http.authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().anyRequest().authenticated().and()
 				.httpBasic().and().csrf().disable();
 	}
