@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -13,6 +14,10 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+
+import com.dri.properties.OAuth2ClientProperties;
+import com.dri.properties.OAuth2Properties;
+import com.dri.properties.SecurityProperties;
 
 
 /**
@@ -35,6 +40,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Autowired(required = false)
 	private JwtAccessTokenConverter jwtAccessTokenConverter;
 	
+	@Autowired
+	private SecurityProperties securityProperties;
+	
 	 /**
      * 令牌存储
      * @return redis令牌存储对象
@@ -54,16 +62,20 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		
-		clients.inMemory()
-		       .withClient("android")
-		       .scopes("xx")
-		       .secret("android")
+		InMemoryClientDetailsServiceBuilder builder = clients.inMemory();
+		//遍历数组
+		for( OAuth2ClientProperties client : securityProperties.getOauth2().getClients()) {
+			builder.withClient(client.getClientId())
+		       .secret(client.getClientSecret())
 		       .authorizedGrantTypes("password", "authorization_code", "refresh_token")
-		       .accessTokenValiditySeconds(3600)
-		       .and()
-		       .withClient("webapp")
-		       .scopes("xx")
-		       .authorizedGrantTypes("implicit");
+		       .accessTokenValiditySeconds(client.getAccessTokenValidateSeconds())
+		       .scopes("all");
+		       //.and()
+		       //.withClient("webapp")
+		       //.scopes("xx")
+		       //.authorizedGrantTypes("implicit");
+		}
+		
 		
 		
 	}
