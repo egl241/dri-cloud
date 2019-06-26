@@ -20,8 +20,10 @@ public class GatewayApplication {
 		SpringApplication.run(GatewayApplication.class, args);
 	}
 
-	 @Bean public DriFilter myFilter() 
-	 { return new DriFilter(); }
+	 @Bean 
+	public DriFilter myFilter() { 
+		 return new DriFilter(); 
+	}
 	
 	/*
 	 * @Bean public RateLimiterFilter rateLimiterFilter() { return new
