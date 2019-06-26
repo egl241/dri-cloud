@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.dri.properties.SecurityProperties;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
@@ -26,6 +28,8 @@ public class DriFilter extends ZuulFilter {
 	
 	private static final Logger log = LoggerFactory.getLogger(DriFilter.class);
 
+	@Autowired
+	private SecurityProperties securityProperties;
 
 	@Override
 	public boolean shouldFilter() {
@@ -35,13 +39,9 @@ public class DriFilter extends ZuulFilter {
 
 	@Override
 	public Object run() throws ZuulException {
-		
 		RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        
-        
         Object authorizationInfo = request.getHeader("Authorization");
-        
         if (authorizationInfo==null){
         	log.info("Authorization info is empty!");
         	ctx.setSendZuulResponse(false);
@@ -50,9 +50,10 @@ public class DriFilter extends ZuulFilter {
             return null;
         }
         String token = StringUtils.substringAfter(request.getHeader("Authorization"), "Bearer ");
-
 		try {
-			Claims claims = Jwts.parser().setSigningKey("test".getBytes("UTF-8")).parseClaimsJws(token.toString()).getBody();
+			Claims claims = Jwts.parser().setSigningKey(
+					securityProperties.getOauth2().getJwtSigningKey().getBytes("UTF-8")).
+					parseClaimsJws(token.toString()).getBody();
 			long expirationTime = claims.getExpiration().getTime();
 			long currentTime = System.currentTimeMillis();
 			if(expirationTime>currentTime) {
@@ -74,19 +75,19 @@ public class DriFilter extends ZuulFilter {
         	ctx.setResponseBody("jwt token is Expired");
         	return null;
 		} catch (UnsupportedJwtException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (MalformedJwtException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SignatureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			log.info("JWT signature does not match locally computed signature.");
+			ctx.setSendZuulResponse(false);
+        	ctx.setResponseStatusCode(401);
+        	ctx.setResponseBody("JWT validity cannot be asserted and should not be trusted.");
+        	return null;
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

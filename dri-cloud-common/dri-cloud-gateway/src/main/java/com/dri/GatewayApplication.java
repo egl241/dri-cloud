@@ -26,5 +26,6 @@ public class GatewayApplication {
 	/*
 	 * @Bean public RateLimiterFilter rateLimiterFilter() { return new
 	 * RateLimiterFilter(); }
+	 * 
 	 */
 }
