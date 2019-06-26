@@ -46,14 +46,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-		System.out.println("MyAuthorizationServerConfig configure(AuthorizationServerSecurityConfigurer security)");
 		security.tokenKeyAccess("permitAll()")
 		        .checkTokenAccess("isAuthenticated()");
 	}
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		System.out.println("MyAuthorizationServerConfig configure(ClientDetailsServiceConfigurer clients)");
 		
 		clients.inMemory()
 		       .withClient("android")
