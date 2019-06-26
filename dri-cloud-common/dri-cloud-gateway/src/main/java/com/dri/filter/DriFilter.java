@@ -33,7 +33,11 @@ public class DriFilter extends ZuulFilter {
 
 	@Override
 	public boolean shouldFilter() {
-		// TODO Auto-generated method stub
+		RequestContext ctx = RequestContext.getCurrentContext();
+        HttpServletRequest request = ctx.getRequest();
+        if(request.getRequestURI().endsWith("/oauth/token")) {
+        	return false;
+        }
 		return true;
 	}
 
@@ -67,8 +71,6 @@ public class DriFilter extends ZuulFilter {
 			log.info("client_id:"+claims.get("client_id"));
 		
 		} catch (ExpiredJwtException e) {
-			
-			//e.printStackTrace();
 			log.info("抱歉====>令牌已过期。。。。。");
 			ctx.setSendZuulResponse(false);
         	ctx.setResponseStatusCode(401);
@@ -79,14 +81,17 @@ public class DriFilter extends ZuulFilter {
 		} catch (MalformedJwtException e) {
 			e.printStackTrace();
 		} catch (SignatureException e) {
-			//e.printStackTrace();
 			log.info("JWT signature does not match locally computed signature.");
 			ctx.setSendZuulResponse(false);
         	ctx.setResponseStatusCode(401);
         	ctx.setResponseBody("JWT validity cannot be asserted and should not be trusted.");
         	return null;
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			log.info("JWT String argument cannot be null or empty");
+			ctx.setSendZuulResponse(false);
+        	ctx.setResponseStatusCode(401);
+        	ctx.setResponseBody("JWT String argument cannot be null or empty");
+        	return null;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
