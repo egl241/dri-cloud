@@ -40,7 +40,15 @@ public class MyFilter extends ZuulFilter {
         HttpServletRequest request = ctx.getRequest();
         
         
-        Object accessToken = request.getHeader("Authorization");
+        Object authorizationInfo = request.getHeader("Authorization");
+        
+        if (authorizationInfo==null){
+        	log.info("Authorization info is empty!");
+        	ctx.setSendZuulResponse(false);
+        	ctx.setResponseStatusCode(401);
+        	ctx.setResponseBody("Authorization info is empty");
+            return null;
+        }
         String token = StringUtils.substringAfter(request.getHeader("Authorization"), "Bearer ");
 
 		try {
@@ -58,8 +66,13 @@ public class MyFilter extends ZuulFilter {
 			log.info("client_id:"+claims.get("client_id"));
 		
 		} catch (ExpiredJwtException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			//e.printStackTrace();
+			log.info("抱歉====>令牌已过期。。。。。");
+			ctx.setSendZuulResponse(false);
+        	ctx.setResponseStatusCode(401);
+        	ctx.setResponseBody("jwt token is Expired");
+        	return null;
 		} catch (UnsupportedJwtException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,32 +89,8 @@ public class MyFilter extends ZuulFilter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-			
 		
-        
-        if (accessToken==null){
-        	System.out.println("Authorization token is empty!!!!!!!!!!!!!!!!");
-        	ctx.setSendZuulResponse(false);
-        	ctx.setResponseStatusCode(401);
-        	ctx.setResponseBody("Authorization token is empty");
-            return null;
-        }
-
-        /*
-        System.out.println(String.format("%s request to %s", request.getMethod(), request.getRequestURL().toString()));
-        //log.info(String.format("%s request to %s", request.getMethod(), request.getRequestURL().toString()));
-
-        Object accessToken = request.getParameter("accessToken");
-        if (accessToken == null) {
-            //log.warn("access token is empty");
-            System.out.println("access token is empty");
-            ctx.setSendZuulResponse(false);
-            ctx.setResponseBody("lack access token");
-            ctx.setResponseStatusCode(401);
-            return null;
-        }
-        */
-        System.out.println("access token ok");
+        log.info("access token is ok");
         return null;
 	}
 
