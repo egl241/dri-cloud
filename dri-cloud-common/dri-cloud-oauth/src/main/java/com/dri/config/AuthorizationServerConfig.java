@@ -82,7 +82,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		System.out.println("MyAuthorizationServerConfig configure(AuthorizationServerEndpointsConfigurer endpoints");
 		
 		endpoints.authenticationManager(this.authenticationManager);
 		endpoints.tokenStore(tokenStore());
