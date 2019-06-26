@@ -22,9 +22,9 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
-public class MyFilter extends ZuulFilter {
+public class DriFilter extends ZuulFilter {
 	
-	private static final Logger log = LoggerFactory.getLogger(MyFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(DriFilter.class);
 
 
 	@Override

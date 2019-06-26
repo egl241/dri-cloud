@@ -7,7 +7,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
 
-import com.dri.filter.MyFilter;
+import com.dri.filter.DriFilter;
 import com.dri.filter.RateLimiterFilter;
 
 @EnableZuulProxy
@@ -20,8 +20,8 @@ public class GatewayApplication {
 		SpringApplication.run(GatewayApplication.class, args);
 	}
 
-	 @Bean public MyFilter myFilter() 
-	 { return new MyFilter(); }
+	 @Bean public DriFilter myFilter() 
+	 { return new DriFilter(); }
 	
 	/*
 	 * @Bean public RateLimiterFilter rateLimiterFilter() { return new
