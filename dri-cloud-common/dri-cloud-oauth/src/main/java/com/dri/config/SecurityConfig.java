@@ -1,5 +1,7 @@
 package com.dri.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,8 @@ import com.dri.security.DomainUserDetailsService;
 @EnableWebSecurity
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
 
 	/**
 	 * 注入用户信息服务
