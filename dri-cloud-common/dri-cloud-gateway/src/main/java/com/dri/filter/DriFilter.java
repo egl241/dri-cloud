@@ -77,9 +77,17 @@ public class DriFilter extends ZuulFilter {
         	ctx.setResponseBody("jwt token is Expired");
         	return null;
 		} catch (UnsupportedJwtException e) {
-			e.printStackTrace();
+			log.info("UnsupportedJwtException");
+			ctx.setSendZuulResponse(false);
+        	ctx.setResponseStatusCode(401);
+        	ctx.setResponseBody("UnsupportedJwtException");
+        	return null;
 		} catch (MalformedJwtException e) {
-			e.printStackTrace();
+			log.info("Unable to read JSON value.");
+			ctx.setSendZuulResponse(false);
+        	ctx.setResponseStatusCode(401);
+        	ctx.setResponseBody("Unable to read JSON value.");
+        	return null;
 		} catch (SignatureException e) {
 			log.info("JWT signature does not match locally computed signature.");
 			ctx.setSendZuulResponse(false);
@@ -93,7 +101,11 @@ public class DriFilter extends ZuulFilter {
         	ctx.setResponseBody("JWT String argument cannot be null or empty");
         	return null;
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			log.info("UnsupportedEncodingException.");
+			ctx.setSendZuulResponse(false);
+        	ctx.setResponseStatusCode(401);
+        	ctx.setResponseBody("UnsupportedEncodingException.");
+        	return null;
 		}
 		
         log.info("access token is ok");
