@@ -9,4 +9,5 @@ import com.dri.properties.SecurityProperties;
 @EnableConfigurationProperties(SecurityProperties.class)
 public class SecurityCoreConfig {
 
+	
 }
