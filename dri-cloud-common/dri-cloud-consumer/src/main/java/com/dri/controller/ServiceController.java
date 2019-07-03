@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.dri.aop.log.SysLogOption;
+import com.dri.aop.log.SysLogOption.Opr;
+import com.dri.aop.log.SysLogOption.Sys;
 import com.dri.service.BusinessService;
 
 @RestController
@@ -26,6 +29,8 @@ public class ServiceController {
 	public String query(String param) throws Exception {	
 		return serviceName + ":" + port;
 	}
+	
+	@SysLogOption(sys =Sys.EAP_OA ,operation = Opr.QUERY,module = "test")
 	@GetMapping("/get1")
 	public String query1(String param) throws Exception {	
 		return serviceName + ":" + port;
