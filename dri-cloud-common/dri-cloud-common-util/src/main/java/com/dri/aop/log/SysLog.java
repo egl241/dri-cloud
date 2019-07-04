@@ -27,8 +27,6 @@ public class SysLog implements Serializable {
 	private String oprType;
 	// 操作用户
 	private String oprUser;
-	// 用户类型
-	private String userType;
 	// 操作时间
 	private Long operTime;
 	// 操作时间-字符串
@@ -125,14 +123,6 @@ public class SysLog implements Serializable {
 		this.oprUser = oprUser;
 	}
 
-	public String getUserType() {
-		return userType;
-	}
-
-	public void setUserType(String userType) {
-		this.userType = userType;
-	}
-
 	public Long getOperTime() {
 		return operTime;
 	}
@@ -202,7 +192,7 @@ public class SysLog implements Serializable {
 	public String toString() {
 		return "SysLog [id=" + id + ", logType=" + logType + ", sysCode=" + sysCode + ", moduleName=" + moduleName
 				+ ", method=" + method + ", ip=" + ip + ", appHost=" + appHost + ", oprType=" + oprType + ", oprUser="
-				+ oprUser + ", userType=" + userType + ", operTime=" + operTime + ", operTimeStr=" + operTimeStr
+				+ oprUser + ", operTime=" + operTime + ", operTimeStr=" + operTimeStr
 				+ ", createTime=" + createTime + ", desc=" + desc + ", params=" + params + ", usedTime=" + usedTime
 				+ ", result=" + result + "]";
 	}
